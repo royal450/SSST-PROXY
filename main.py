@@ -1,7 +1,9 @@
 import asyncio
+import os
 from asyncio import Task
 from typing import Any, Coroutine
 
+from dotenv import load_dotenv
 from loguru import logger
 from telegram import (
     BotCommand,
@@ -19,6 +21,10 @@ from telegram.ext import (
     filters,
 )
 
+# .env फाइल लोड करें
+load_dotenv()
+
+# सेटिंग्स कॉन्फिगर करें (आपके मूल कोड के अनुसार)
 from hiroshi.config import application_settings, telegram_settings
 from hiroshi.services.bot import (
     handle_available_providers_options,
@@ -36,7 +42,6 @@ from hiroshi.utils import (
     run_monitoring,
     user_interacts_with_bot,
 )
-
 
 class HiroshiBot:
     def __init__(self) -> None:
@@ -164,13 +169,6 @@ class HiroshiBot:
         app.add_handler(CommandHandler("provider", self.show_menu))
         app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), self.prompt))
         app.add_handler(CallbackQueryHandler(self.select_provider))
-        # TODO It doesn't work de-facto. Need to fix it first.
-        # app.add_handler(
-        #     InlineQueryHandler(
-        #         self.inline_query,
-        #         chat_types=[constants.ChatType.GROUP, constants.ChatType.SUPERGROUP],
-        #     )
-        # )
         app.add_error_handler(self.error_handler)
         if not app.job_queue:
             logger.error("Application job queue was shut down or never started.")
@@ -181,9 +179,7 @@ class HiroshiBot:
 
         app.run_polling()
 
-    if __name__ == "__main__":
-        app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000))) 
-        log_application_settings()
-        telegram_bot = HiroshiBot()
-        telegram_bot.run()
-    
+if __name__ == "__main__":
+    log_application_settings()
+    telegram_bot = HiroshiBot()
+    telegram_bot.run()
