@@ -181,9 +181,9 @@ class HiroshiBot:
 
         app.run_polling()
 
-    
     if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000))) 
-    log_application_settings()
-    telegram_bot = HiroshiBot()
-    telegram_bot.run()
+        app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000))) 
+        log_application_settings()
+        telegram_bot = HiroshiBot()
+        telegram_bot.run()
+    
